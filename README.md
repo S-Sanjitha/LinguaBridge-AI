@@ -2,7 +2,9 @@
 
 Translate English text into French using the pretrained MarianMT model
 [`Helsinki-NLP/opus-mt-en-fr`](https://huggingface.co/Helsinki-NLP/opus-mt-en-fr).
-This Phase 2 baseline runs on CPU.
+MarianMT produces a draft. A single pretrained
+[Qwen2.5-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct)
+agent reviews it against the English input and optional context. Both models run on CPU.
 
 ## CPU setup
 
@@ -20,13 +22,34 @@ python -m pip install -r requirements.txt
 
 ```bash
 python -m linguabridge "Hello, how are you?"
+python -m linguabridge "Can you help me?" --formality formal
+python -m linguabridge "Are you ready?" --formality informal --listener-gender feminine
+python -m linguabridge "I saw a bat." --meaning "A baseball bat"
 python -m linguabridge
+python -m linguabridge --mt-only "Hello, how are you?"
 ```
 
-The second command prompts for English text. The first run downloads the model
+Running without a sentence prompts for English text. The first run downloads the requested models
 from Hugging Face into its local cache. Set `HF_HOME` to a writable directory if
-the default cache location is unavailable. Later runs reuse the cached model.
+the default cache location is unavailable. Later runs reuse the cached weights.
 Inputs longer than the model's token limit are rejected.
+
+## Agent decisions
+
+- `ACCEPT_MT` returns the MarianMT draft.
+- `REFINE` returns the French translation proposed by Qwen.
+- `CLARIFY` displays a question. Rerun the CLI with the answer in the matching
+  context option, such as `--meaning`.
+- `FLAG` displays a review reason and leaves the final translation unset.
+
+Use `--speaker-gender` or `--listener-gender` when French agreement depends on
+that person. Both options accept `feminine` or `masculine`.
+
+The agent validates the response structure and checks for changes to digit
+sequences, common negation markers, and likely proper names shared by the
+source and draft. These checks are heuristic. They can flag valid formatting
+changes and miss semantic errors. Small-model decisions can also be wrong,
+including unnecessary clarification and mistakes in gender agreement.
 
 ## Run the tests
 
@@ -34,5 +57,6 @@ Inputs longer than the model's token limit are rejected.
 python -m pytest -q
 ```
 
-The tests load the real pretrained weights and require network access on the
-first run unless the model is already cached.
+The MarianMT tests load real weights and require network access on the first
+run unless the model is cached. Agent unit tests use mocked translation and
+review responses. The CLI examples run real Qwen inference in agent mode.
