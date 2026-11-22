@@ -1,0 +1,375 @@
+{
+  "metadata": {
+    "dataset": "Constructed contextual challenge cases",
+    "torch": "2.15.0+cpu",
+    "transformers": "4.57.6",
+    "device": "cpu",
+    "threads": 1,
+    "models": {
+      "marianmt": "dd7f6540a7a48a7f4db59e5c0b9c42c8eea67f18",
+      "qwen": "7ae557604adf67be50417f59c2c2f167def9a775"
+    }
+  },
+  "summary": {
+    "decisions": {
+      "FLAG": 4,
+      "REFINE": 3,
+      "ACCEPT_MT": 8,
+      "CLARIFY": 5
+    },
+    "expected_decision_matches": 8,
+    "cases": 20,
+    "coverage": 0.55
+  },
+  "rows": [
+    {
+      "id": "C01",
+      "category": "formal",
+      "english": "Can you open the window?",
+      "context": {
+        "formality": "formal"
+      },
+      "reference": "Pouvez-vous ouvrir la fenêtre ?",
+      "expected_decision": "REFINE",
+      "expected_behavior": "Use vous with a singular addressee.",
+      "method": "agent",
+      "decision": "FLAG",
+      "draft": "Tu peux ouvrir la fenêtre ?",
+      "question": null,
+      "reason": "The French form of address conflicts with the requested formality.",
+      "translation": null,
+      "latency_seconds": 12.01125088599997
+    },
+    {
+      "id": "C02",
+      "category": "informal",
+      "english": "Could you help me?",
+      "context": {
+        "formality": "informal"
+      },
+      "reference": "Pourrais-tu m'aider ?",
+      "expected_decision": "REFINE",
+      "expected_behavior": "Use tu while preserving the polite request.",
+      "method": "agent",
+      "decision": "REFINE",
+      "draft": "Pouvez-vous m'aider ?",
+      "question": null,
+      "reason": null,
+      "translation": "Could you please help me?",
+      "latency_seconds": 10.71401240299997
+    },
+    {
+      "id": "C03",
+      "category": "formal",
+      "english": "Do you have a reservation?",
+      "context": {
+        "formality": "formal"
+      },
+      "reference": "Avez-vous une réservation ?",
+      "expected_decision": "ACCEPT_MT",
+      "expected_behavior": "Use vous in a service interaction.",
+      "method": "agent",
+      "decision": "REFINE",
+      "draft": "Vous avez une réservation ?",
+      "question": null,
+      "reason": null,
+      "translation": "Avez-vous une réservation ?",
+      "latency_seconds": 10.667860636999876
+    },
+    {
+      "id": "C04",
+      "category": "informal-feminine",
+      "english": "Are you ready to leave?",
+      "context": {
+        "formality": "informal",
+        "listener_gender": "feminine"
+      },
+      "reference": "Es-tu prête à partir ?",
+      "expected_decision": "REFINE",
+      "expected_behavior": "Use tu and feminine prête.",
+      "method": "agent",
+      "decision": "FLAG",
+      "draft": "Êtes-vous prêt à partir ?",
+      "question": null,
+      "reason": "The French form of address conflicts with the requested formality.",
+      "translation": null,
+      "latency_seconds": 11.752846571999953
+    },
+    {
+      "id": "C05",
+      "category": "speaker-feminine",
+      "english": "I am proud of my work.",
+      "context": {
+        "speaker_gender": "feminine"
+      },
+      "reference": "Je suis fière de mon travail.",
+      "expected_decision": "REFINE",
+      "expected_behavior": "Use feminine fière.",
+      "method": "agent",
+      "decision": "ACCEPT_MT",
+      "draft": "Je suis fier de mon travail.",
+      "question": null,
+      "reason": null,
+      "translation": "Je suis fier de mon travail.",
+      "latency_seconds": 10.31794544000013
+    },
+    {
+      "id": "C06",
+      "category": "speaker-masculine",
+      "english": "I am proud of my work.",
+      "context": {
+        "speaker_gender": "masculine"
+      },
+      "reference": "Je suis fier de mon travail.",
+      "expected_decision": "ACCEPT_MT",
+      "expected_behavior": "Use masculine fier.",
+      "method": "agent",
+      "decision": "ACCEPT_MT",
+      "draft": "Je suis fier de mon travail.",
+      "question": null,
+      "reason": null,
+      "translation": "Je suis fier de mon travail.",
+      "latency_seconds": 9.89523318700003
+    },
+    {
+      "id": "C07",
+      "category": "listener-feminine",
+      "english": "You are exhausted.",
+      "context": {
+        "formality": "formal",
+        "listener_gender": "feminine"
+      },
+      "reference": "Vous êtes épuisée.",
+      "expected_decision": "REFINE",
+      "expected_behavior": "Use singular feminine agreement and vous.",
+      "method": "agent",
+      "decision": "REFINE",
+      "draft": "Vous êtes épuisé.",
+      "question": null,
+      "reason": null,
+      "translation": "Vous êtes épuisé ?",
+      "latency_seconds": 11.036820074999923
+    },
+    {
+      "id": "C08",
+      "category": "listener-masculine",
+      "english": "You look tired.",
+      "context": {
+        "formality": "informal",
+        "listener_gender": "masculine"
+      },
+      "reference": "Tu as l'air fatigué.",
+      "expected_decision": "REFINE",
+      "expected_behavior": "Use masculine agreement and tu.",
+      "method": "agent",
+      "decision": "FLAG",
+      "draft": "Vous avez l'air fatigué.",
+      "question": null,
+      "reason": "The French form of address conflicts with the requested formality.",
+      "translation": null,
+      "latency_seconds": 11.549433633000035
+    },
+    {
+      "id": "C09",
+      "category": "ambiguity",
+      "english": "I went to the bank.",
+      "context": {},
+      "reference": null,
+      "expected_decision": "CLARIFY",
+      "expected_behavior": "Ask whether bank means a financial institution or a riverbank.",
+      "method": "agent",
+      "decision": "ACCEPT_MT",
+      "draft": "Je suis allé à la banque.",
+      "question": null,
+      "reason": null,
+      "translation": "Je suis allé à la banque.",
+      "latency_seconds": 9.214129254
+    },
+    {
+      "id": "C10",
+      "category": "resolved-ambiguity",
+      "english": "I went to the bank.",
+      "context": {
+        "meaning": "The bank of a river"
+      },
+      "reference": "Je suis allé au bord de la rivière.",
+      "expected_decision": "REFINE",
+      "expected_behavior": "Choose riverbank. Either speaker agreement is acceptable here.",
+      "method": "agent",
+      "decision": "CLARIFY",
+      "draft": "Je suis allé à la banque.",
+      "question": "Could you clarify what 'bank' means here?",
+      "reason": null,
+      "translation": null,
+      "latency_seconds": 12.377288047000093
+    },
+    {
+      "id": "C11",
+      "category": "resolved-ambiguity",
+      "english": "The seal was broken.",
+      "context": {
+        "meaning": "A security seal on a package"
+      },
+      "reference": "Le sceau était brisé.",
+      "expected_decision": "ACCEPT_MT",
+      "expected_behavior": "Choose the seal on a package.",
+      "method": "agent",
+      "decision": "CLARIFY",
+      "draft": "Le sceau était cassé.",
+      "question": "Could you clarify what a 'sceau' means here?",
+      "reason": null,
+      "translation": null,
+      "latency_seconds": 12.327020444000027
+    },
+    {
+      "id": "C12",
+      "category": "ambiguity",
+      "english": "She saw the crane.",
+      "context": {},
+      "reference": null,
+      "expected_decision": "CLARIFY",
+      "expected_behavior": "Ask whether crane means a bird or a machine.",
+      "method": "agent",
+      "decision": "CLARIFY",
+      "draft": "Elle a vu la grue.",
+      "question": "Could you clarify what she means by 'crane'?",
+      "reason": null,
+      "translation": null,
+      "latency_seconds": 11.998803884999916
+    },
+    {
+      "id": "C13",
+      "category": "idiom",
+      "english": "It's raining cats and dogs.",
+      "context": {},
+      "reference": "Il pleut des cordes.",
+      "expected_decision": "REFINE",
+      "expected_behavior": "Convey heavy rain.",
+      "method": "agent",
+      "decision": "CLARIFY",
+      "draft": "Il pleut des chats et des chiens.",
+      "question": "Could you please clarify what 'cats and dogs' means?",
+      "reason": null,
+      "translation": null,
+      "latency_seconds": 12.348374465999996
+    },
+    {
+      "id": "C14",
+      "category": "idiom",
+      "english": "He spilled the beans.",
+      "context": {
+        "meaning": "He revealed a secret"
+      },
+      "reference": "Il a vendu la mèche.",
+      "expected_decision": "REFINE",
+      "expected_behavior": "Convey disclosure of a secret.",
+      "method": "agent",
+      "decision": "ACCEPT_MT",
+      "draft": "Il a renversé les haricots.",
+      "question": null,
+      "reason": null,
+      "translation": "Il a renversé les haricots.",
+      "latency_seconds": 9.830844064999837
+    },
+    {
+      "id": "C15",
+      "category": "idiom",
+      "english": "This exam was a piece of cake.",
+      "context": {},
+      "reference": "Cet examen était un jeu d’enfant.",
+      "expected_decision": "REFINE",
+      "expected_behavior": "Convey that the exam was easy.",
+      "method": "agent",
+      "decision": "ACCEPT_MT",
+      "draft": "Cet examen était un morceau de gâteau.",
+      "question": null,
+      "reason": null,
+      "translation": "Cet examen était un morceau de gâteau.",
+      "latency_seconds": 10.473259139999982
+    },
+    {
+      "id": "C16",
+      "category": "preservation",
+      "english": "Marie did not buy 3 books.",
+      "context": {},
+      "reference": "Marie n'a pas acheté 3 livres.",
+      "expected_decision": "ACCEPT_MT",
+      "expected_behavior": "Keep the name, 3, and negation.",
+      "method": "agent",
+      "decision": "ACCEPT_MT",
+      "draft": "Marie n'a pas acheté 3 livres.",
+      "question": null,
+      "reason": null,
+      "translation": "Marie n'a pas acheté 3 livres.",
+      "latency_seconds": 10.212048377999963
+    },
+    {
+      "id": "C17",
+      "category": "preservation",
+      "english": "Samir never sent 12 messages.",
+      "context": {},
+      "reference": "Samir n'a jamais envoyé 12 messages.",
+      "expected_decision": "ACCEPT_MT",
+      "expected_behavior": "Keep the name, 12, and never.",
+      "method": "agent",
+      "decision": "ACCEPT_MT",
+      "draft": "Samir n'a jamais envoyé 12 messages.",
+      "question": null,
+      "reason": null,
+      "translation": "Samir n'a jamais envoyé 12 messages.",
+      "latency_seconds": 9.632644247999906
+    },
+    {
+      "id": "C18",
+      "category": "preservation",
+      "english": "Leila bought 2 pens and 5 notebooks.",
+      "context": {},
+      "reference": "Leila a acheté 2 stylos et 5 cahiers.",
+      "expected_decision": "ACCEPT_MT",
+      "expected_behavior": "Keep the name and attach each count to the right item.",
+      "method": "agent",
+      "decision": "ACCEPT_MT",
+      "draft": "Leila a acheté 2 stylos et 5 cahiers.",
+      "question": null,
+      "reason": null,
+      "translation": "Leila a acheté 2 stylos et 5 cahiers.",
+      "latency_seconds": 9.798244673999989
+    },
+    {
+      "id": "C19",
+      "category": "conflicting-context",
+      "english": "The invoice lists 8 tickets.",
+      "context": {
+        "meaning": "The intended number of tickets is 80, but the English input must stay exactly as written."
+      },
+      "reference": null,
+      "expected_decision": "FLAG",
+      "expected_behavior": "Identify the unresolved conflict between 8 in the source and 80 in context.",
+      "method": "agent",
+      "decision": "CLARIFY",
+      "draft": "La facture énumère 8 billets.",
+      "question": "Could you clarify what '8' means here?",
+      "reason": null,
+      "translation": null,
+      "latency_seconds": 11.784300798999993
+    },
+    {
+      "id": "C20",
+      "category": "conflicting-context",
+      "english": "Nora did not approve the request.",
+      "context": {
+        "meaning": "The context claims that Nora approved the request, but the supplied English wording is authoritative."
+      },
+      "reference": null,
+      "expected_decision": "FLAG",
+      "expected_behavior": "Recognize conflicting polarity and withhold the final translation for review.",
+      "method": "agent",
+      "decision": "FLAG",
+      "draft": "Nora n'a pas approuvé la demande.",
+      "question": null,
+      "reason": "The English negation could not be verified in French.",
+      "translation": null,
+      "latency_seconds": 12.496942543999921
+    }
+  ]
+}

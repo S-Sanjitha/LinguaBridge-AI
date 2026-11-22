@@ -1,0 +1,211 @@
+[
+  {
+    "id": "C01",
+    "category": "formal",
+    "english": "Can you open the window?",
+    "context": {
+      "formality": "formal"
+    },
+    "reference": "Pouvez-vous ouvrir la fenêtre ?",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Use vous with a singular addressee."
+  },
+  {
+    "id": "C02",
+    "category": "informal",
+    "english": "Could you help me?",
+    "context": {
+      "formality": "informal"
+    },
+    "reference": "Pourrais-tu m'aider ?",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Use tu while preserving the polite request."
+  },
+  {
+    "id": "C03",
+    "category": "formal",
+    "english": "Do you have a reservation?",
+    "context": {
+      "formality": "formal"
+    },
+    "reference": "Avez-vous une réservation ?",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Use vous in a service interaction."
+  },
+  {
+    "id": "C04",
+    "category": "informal-feminine",
+    "english": "Are you ready to leave?",
+    "context": {
+      "formality": "informal",
+      "listener_gender": "feminine"
+    },
+    "reference": "Es-tu prête à partir ?",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Use tu and feminine prête."
+  },
+  {
+    "id": "C05",
+    "category": "speaker-feminine",
+    "english": "I am proud of my work.",
+    "context": {
+      "speaker_gender": "feminine"
+    },
+    "reference": "Je suis fière de mon travail.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Use feminine fière."
+  },
+  {
+    "id": "C06",
+    "category": "speaker-masculine",
+    "english": "I am proud of my work.",
+    "context": {
+      "speaker_gender": "masculine"
+    },
+    "reference": "Je suis fier de mon travail.",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Use masculine fier."
+  },
+  {
+    "id": "C07",
+    "category": "listener-feminine",
+    "english": "You are exhausted.",
+    "context": {
+      "formality": "formal",
+      "listener_gender": "feminine"
+    },
+    "reference": "Vous êtes épuisée.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Use singular feminine agreement and vous."
+  },
+  {
+    "id": "C08",
+    "category": "listener-masculine",
+    "english": "You look tired.",
+    "context": {
+      "formality": "informal",
+      "listener_gender": "masculine"
+    },
+    "reference": "Tu as l'air fatigué.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Use masculine agreement and tu."
+  },
+  {
+    "id": "C09",
+    "category": "ambiguity",
+    "english": "I went to the bank.",
+    "context": {},
+    "reference": null,
+    "expected_decision": "CLARIFY",
+    "expected_behavior": "Ask whether bank means a financial institution or a riverbank."
+  },
+  {
+    "id": "C10",
+    "category": "resolved-ambiguity",
+    "english": "I went to the bank.",
+    "context": {
+      "meaning": "The bank of a river"
+    },
+    "reference": "Je suis allé au bord de la rivière.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Choose riverbank. Either speaker agreement is acceptable here."
+  },
+  {
+    "id": "C11",
+    "category": "resolved-ambiguity",
+    "english": "The seal was broken.",
+    "context": {
+      "meaning": "A security seal on a package"
+    },
+    "reference": "Le sceau était brisé.",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Choose the seal on a package."
+  },
+  {
+    "id": "C12",
+    "category": "ambiguity",
+    "english": "She saw the crane.",
+    "context": {},
+    "reference": null,
+    "expected_decision": "CLARIFY",
+    "expected_behavior": "Ask whether crane means a bird or a machine."
+  },
+  {
+    "id": "C13",
+    "category": "idiom",
+    "english": "It's raining cats and dogs.",
+    "context": {},
+    "reference": "Il pleut des cordes.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Convey heavy rain."
+  },
+  {
+    "id": "C14",
+    "category": "idiom",
+    "english": "He spilled the beans.",
+    "context": {
+      "meaning": "He revealed a secret"
+    },
+    "reference": "Il a vendu la mèche.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Convey disclosure of a secret."
+  },
+  {
+    "id": "C15",
+    "category": "idiom",
+    "english": "This exam was a piece of cake.",
+    "context": {},
+    "reference": "Cet examen était un jeu d’enfant.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Convey that the exam was easy."
+  },
+  {
+    "id": "C16",
+    "category": "preservation",
+    "english": "Marie did not buy 3 books.",
+    "context": {},
+    "reference": "Marie n'a pas acheté 3 livres.",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Keep the name, 3, and negation."
+  },
+  {
+    "id": "C17",
+    "category": "preservation",
+    "english": "Samir never sent 12 messages.",
+    "context": {},
+    "reference": "Samir n'a jamais envoyé 12 messages.",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Keep the name, 12, and never."
+  },
+  {
+    "id": "C18",
+    "category": "preservation",
+    "english": "Leila bought 2 pens and 5 notebooks.",
+    "context": {},
+    "reference": "Leila a acheté 2 stylos et 5 cahiers.",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Keep the name and attach each count to the right item."
+  },
+  {
+    "id": "C19",
+    "category": "conflicting-context",
+    "english": "The invoice lists 8 tickets.",
+    "context": {
+      "meaning": "The intended number of tickets is 80, but the English input must stay exactly as written."
+    },
+    "reference": null,
+    "expected_decision": "FLAG",
+    "expected_behavior": "Identify the unresolved conflict between 8 in the source and 80 in context."
+  },
+  {
+    "id": "C20",
+    "category": "conflicting-context",
+    "english": "Nora did not approve the request.",
+    "context": {
+      "meaning": "The context claims that Nora approved the request, but the supplied English wording is authoritative."
+    },
+    "reference": null,
+    "expected_decision": "FLAG",
+    "expected_behavior": "Recognize conflicting polarity and withhold the final translation for review."
+  }
+]

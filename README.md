@@ -60,3 +60,8 @@ python -m pytest -q
 The MarianMT tests load real weights and require network access on the first
 run unless the model is cached. Agent unit tests use mocked translation and
 review responses. The CLI examples run real Qwen inference in agent mode.
+
+## Evaluation
+
+See [the evaluation report](evaluation/REPORT.md) for the FLORES-200 protocol,
+CPU results, and a separate contextual challenge review.
