@@ -1,0 +1,5 @@
+torch>=2.6,<3
+transformers>=4.49,<5
+sentencepiece>=0.2,<1
+sacremoses>=0.1,<1
+pytest>=8,<10
