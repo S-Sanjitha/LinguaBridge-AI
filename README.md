@@ -65,3 +65,8 @@ review responses. The CLI examples run real Qwen inference in agent mode.
 
 See [the evaluation report](evaluation/REPORT.md) for the FLORES-200 protocol,
 CPU results, and a separate contextual challenge review.
+
+[Phase 4.1](evaluation/PHASE_4_1.md) compares the revised agent with the
+preserved Phase 4 results and reports a separate contextual holdout. The
+agent checks language and basic factual and grammatical constraints,
+asks Qwen to verify free-form revisions, and allows at most one repair.

@@ -4,3 +4,4 @@ sentencepiece>=0.2,<1
 sacremoses>=0.1,<1
 pytest>=8,<10
 sacrebleu==2.5.1
+lingua-language-detector==2.1.1

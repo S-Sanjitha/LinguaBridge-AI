@@ -63,3 +63,32 @@ def test_constructed_set_has_all_decisions_and_context():
         assert case["english"] and case["expected_behavior"]
         assert isinstance(case["context"], dict)
         assert bool(case["reference"]) == (case["expected_decision"] in {"ACCEPT_MT", "REFINE"})
+
+
+def test_english_output_counts_as_unresolved_for_quality():
+    reference = "Il a écrit trois livres."
+    result = run.score([
+        dict(reference=reference, translation="He wrote three books.", valid_french=False,
+             latency_seconds=1, decision="REFINE")
+    ])
+    assert result["coverage"] == 1
+    assert result["valid_french_coverage"] == 0
+    assert result["invalid_french_count"] == 1
+    assert result["resolved_quality"] is None
+    assert result["all_input_quality"]["bleu"] == 0
+
+
+def test_unsupported_precision_or_recall_are_null():
+    result = run.decision_metrics([{"decision": "FLAG", "expected_decision": "CLARIFY"}])
+    assert result["accuracy"] == 0
+    assert result["by_label"]["FLAG"]["precision"] == 0
+    assert result["by_label"]["FLAG"]["recall"] is None
+    assert result["by_label"]["CLARIFY"]["precision"] is None
+    assert result["by_label"]["CLARIFY"]["recall"] == 0
+
+
+def test_holdout_is_separate_from_development_cases():
+    holdout = json.loads(run.HOLDOUT.read_text())
+    development = json.loads(run.CHALLENGES.read_text())
+    assert len(holdout) == 20
+    assert {row["english"] for row in holdout}.isdisjoint(row["english"] for row in development)

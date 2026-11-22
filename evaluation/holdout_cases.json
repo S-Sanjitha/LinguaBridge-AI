@@ -1,0 +1,206 @@
+[
+  {
+    "id": "H01",
+    "category": "formality",
+    "english": "Do you know where the station is?",
+    "context": {
+      "formality": "formal"
+    },
+    "reference": "Savez-vous où se trouve la gare ?",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Address one person with vous and the corresponding verb."
+  },
+  {
+    "id": "H02",
+    "category": "formality",
+    "english": "Do you want to join us tomorrow?",
+    "context": {
+      "formality": "informal"
+    },
+    "reference": "Veux-tu nous rejoindre demain ?",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Use tu, preserve the invitation and tomorrow."
+  },
+  {
+    "id": "H03",
+    "category": "formality",
+    "english": "You must sign this document.",
+    "context": {
+      "formality": "formal"
+    },
+    "reference": "Vous devez signer ce document.",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Use vous and preserve obligation."
+  },
+  {
+    "id": "H04",
+    "category": "speaker-agreement",
+    "english": "I am worried about the delay.",
+    "context": {
+      "speaker_gender": "feminine"
+    },
+    "reference": "Je suis inquiète du retard.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "The speaker should be feminine."
+  },
+  {
+    "id": "H05",
+    "category": "speaker-agreement",
+    "english": "I am delighted to see you.",
+    "context": {
+      "speaker_gender": "masculine"
+    },
+    "reference": "Je suis ravi de vous voir.",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Use masculine speaker agreement. Either form of address is acceptable."
+  },
+  {
+    "id": "H06",
+    "category": "listener-agreement",
+    "english": "You were surprised by the result.",
+    "context": {
+      "listener_gender": "feminine",
+      "formality": "informal"
+    },
+    "reference": "Tu étais surprise du résultat.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Use tu with feminine agreement and preserve past tense."
+  },
+  {
+    "id": "H07",
+    "category": "listener-agreement",
+    "english": "You seem nervous before the interview.",
+    "context": {
+      "listener_gender": "masculine",
+      "formality": "formal"
+    },
+    "reference": "Vous semblez nerveux avant l’entretien.",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Use masculine agreement and formal address."
+  },
+  {
+    "id": "H08",
+    "category": "ambiguity-control",
+    "english": "They heard a bark.",
+    "context": {},
+    "reference": "Ils ont entendu un aboiement.",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Use the dog sound reading implied by heard and avoid clarification."
+  },
+  {
+    "id": "H09",
+    "category": "ambiguity",
+    "english": "She pointed to the bass.",
+    "context": {},
+    "reference": null,
+    "expected_decision": "CLARIFY",
+    "expected_behavior": "Ask whether bass means a fish or a musical instrument."
+  },
+  {
+    "id": "H10",
+    "category": "contextual-sense",
+    "english": "He touched the bark.",
+    "context": {
+      "meaning": "The outer layer of an oak trunk"
+    },
+    "reference": "Il a touché l’écorce.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Translate bark as tree bark."
+  },
+  {
+    "id": "H11",
+    "category": "contextual-sense",
+    "english": "The conductor pointed to the bass.",
+    "context": {
+      "meaning": "A musical instrument in the orchestra"
+    },
+    "reference": "Le chef d’orchestre a montré la basse.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Use the musical meaning of bass."
+  },
+  {
+    "id": "H12",
+    "category": "idiom",
+    "english": "She feels under the weather today.",
+    "context": {},
+    "reference": "Elle ne se sent pas bien aujourd’hui.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Convey that she feels unwell."
+  },
+  {
+    "id": "H13",
+    "category": "idiom",
+    "english": "He calls once in a blue moon.",
+    "context": {},
+    "reference": "Il appelle très rarement.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Convey that the calls are rare."
+  },
+  {
+    "id": "H14",
+    "category": "idiom",
+    "english": "That suitcase costs an arm and a leg.",
+    "context": {},
+    "reference": "Cette valise coûte les yeux de la tête.",
+    "expected_decision": "REFINE",
+    "expected_behavior": "Convey that the suitcase is very expensive."
+  },
+  {
+    "id": "H15",
+    "category": "literal-control",
+    "english": "They ate a piece of cake after lunch.",
+    "context": {},
+    "reference": "Ils ont mangé une part de gâteau après le déjeuner.",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Preserve the literal dessert meaning."
+  },
+  {
+    "id": "H16",
+    "category": "preservation",
+    "english": "Élodie did not reserve 14 seats.",
+    "context": {},
+    "reference": "Élodie n’a pas réservé 14 places.",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Keep Élodie, 14, and negation."
+  },
+  {
+    "id": "H17",
+    "category": "preservation",
+    "english": "Ravi gave 6 notebooks to Inès and 2 pens to Luc.",
+    "context": {},
+    "reference": "Ravi a donné 6 cahiers à Inès et 2 stylos à Luc.",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Keep names, quantities, objects, and recipients correctly associated."
+  },
+  {
+    "id": "H18",
+    "category": "preservation",
+    "english": "Mina never visits Berlin in July.",
+    "context": {},
+    "reference": "Mina ne va jamais à Berlin en juillet.",
+    "expected_decision": "ACCEPT_MT",
+    "expected_behavior": "Keep names, July, and never."
+  },
+  {
+    "id": "H19",
+    "category": "conflict",
+    "english": "The bus leaves at 9.",
+    "context": {
+      "meaning": "The actual number given for the departure time is 11. The source cannot be edited."
+    },
+    "reference": null,
+    "expected_decision": "FLAG",
+    "expected_behavior": "Identify the conflicting times and withhold a final translation."
+  },
+  {
+    "id": "H20",
+    "category": "conflict",
+    "english": "Omar signed the contract.",
+    "context": {
+      "meaning": "Omar never signed this contract; both statements refer to the same document."
+    },
+    "reference": null,
+    "expected_decision": "FLAG",
+    "expected_behavior": "Identify the conflicting polarity."
+  }
+]

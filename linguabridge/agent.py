@@ -2,11 +2,13 @@
 
 import json
 import re
-from collections import Counter
 from dataclasses import dataclass
 from enum import Enum
 from typing import Literal, Protocol
 
+
+from .contextual import agreement, context_conflict, lexical_context, register
+from .validation import preservation_issue
 
 class Decision(str, Enum):
     ACCEPT_MT = "ACCEPT_MT"
@@ -51,7 +53,10 @@ def parse_review(response: str) -> tuple[Decision, str]:
             raise ValueError("Duplicate fields")
         return fields
 
-    review = json.loads(response, object_pairs_hook=unique_fields)
+    if not isinstance(response, str):
+        raise ValueError("Expected a JSON string")
+    fenced = re.fullmatch(r"```(?:json)?[ \t]*\n(.*?)\n```", response.strip(), re.S | re.I)
+    review = json.loads(fenced[1] if fenced else response, object_pairs_hook=unique_fields)
     if not isinstance(review, dict) or review.keys() != {"decision", "text"}:
         raise ValueError("Expected a decision and text")
     decision = Decision(review["decision"])
@@ -65,36 +70,11 @@ def parse_review(response: str) -> tuple[Decision, str]:
     return decision, text
 
 
-DIGITS = re.compile(r"\d+")
-CAPITALIZED = re.compile(r"\b[A-Z][a-z]+\b")
-EN_NEGATION = re.compile(r"\b(?:no|not|never|neither|nor|cannot|nothing|nobody|nowhere)\b|n['’]t\b", re.I)
-FR_NEGATION = re.compile(
-    r"\b(?:pas|jamais|aucun(?:e|es|s)?|ni|sans|non)\b"
-    r"|\b(?:ne\b|n['’])[^.!?]*\b(?:plus|rien|personne|guère)\b",
-    re.I,
-)
-
-
-def preservation_issue(
-    source: str, draft: str, candidate: str, context: Context,
-) -> str | None:
-    if not candidate.strip() or candidate.casefold() == source.casefold():
-        return "The translation is empty or repeats the English source."
-    address = {
-        "formal": r"\b(?:tu|toi|te|tes|ton|ta)\b",
-        "informal": r"\b(?:vous|votre|vos)\b",
-    }
-    if context.formality and re.search(address[context.formality], candidate, re.I):
-        return "The French form of address conflicts with the requested formality."
-    if Counter(DIGITS.findall(source)) != Counter(DIGITS.findall(candidate)):
-        return "The translation changed or reformatted a digit sequence."
-    if EN_NEGATION.search(source) and not FR_NEGATION.search(candidate):
-        return "The English negation could not be verified in French."
-    # A capitalized word shared by source and draft is a likely name. Checking
-    # the intersection avoids treating every English sentence opener as a name.
-    likely_names = set(CAPITALIZED.findall(source)) & set(CAPITALIZED.findall(draft))
-    if likely_names - set(CAPITALIZED.findall(candidate)):
-        return "The refinement dropped or changed a likely proper name."
+def clarification_issue(question, resolved_meaning):
+    if resolved_meaning:
+        return "The supplied meaning already needs to be used before requesting clarification."
+    if not re.search(r"\b(?:or|whether)\b", question, re.I):
+        return "The clarification must specify the alternatives that affect translation."
     return None
 
 
@@ -105,24 +85,66 @@ class TranslationAgent:
 
     def translate(self, source: str, context: Context | None = None) -> Result:
         source = source.strip()
-        draft = self.translator.translate(source)
         context = context or Context()
+        draft = self.translator.translate(source)
+        paraphrase, question = lexical_context(source, context.meaning)
+        prepared = self.translator.translate(paraphrase) if paraphrase else draft
+        prepared = register(prepared, source, context.formality)
+        prepared = agreement(prepared, source, context)
+        conflict = context_conflict(source, context.meaning)
+        if conflict:
+            return Result(draft, Decision.FLAG, reason=conflict)
+        supported = prepared != draft and not preservation_issue(source, draft, prepared, context)
+
         try:
-            response = self.reviewer.review(source, draft, context)
-        except (RuntimeError, OSError, ValueError) as error:
-            return Result(draft, Decision.FLAG, reason=f"Qwen review failed: {error}")
-        try:
+            if prepared != draft and getattr(type(self.reviewer), "review_prepared", None):
+                response = self.reviewer.review_prepared(source, draft, prepared, context)
+            else:
+                response = self.reviewer.review(source, prepared, context)
             decision, text = parse_review(response)
+            if supported:
+                return Result(draft, Decision.REFINE, final_translation=prepared)
+            result = self._result(source, draft, prepared, context, decision, text, question, paraphrase)
+            if result.decision == Decision.FLAG and decision != Decision.FLAG:
+                return self._retry(source, draft, prepared, context, result.reason, question, paraphrase)
+            return result
         except (ValueError, TypeError, RecursionError):
-            return Result(draft, Decision.FLAG, reason="Qwen returned an invalid structured review.")
-        if decision == Decision.CLARIFY:
-            return Result(draft, decision, question=text)
+            if supported:
+                return Result(draft, Decision.REFINE, final_translation=prepared,
+                              reason="Used a validated contextual correction after an invalid Qwen review.")
+            return self._retry(source, draft, prepared, context, "Qwen returned an invalid structured review.", question, paraphrase)
+        except (RuntimeError, OSError) as error:
+            return Result(draft, Decision.FLAG, reason=f"Qwen review failed: {error}")
+
+    def _result(self, source, draft, prepared, context, decision, text, lexical_question, paraphrase):
         if decision == Decision.FLAG:
             return Result(draft, decision, reason=text)
-        candidate = draft if decision == Decision.ACCEPT_MT else text
+        if lexical_question:
+            return Result(draft, Decision.CLARIFY, question=lexical_question)
+        if decision == Decision.CLARIFY:
+            issue = clarification_issue(text, paraphrase and context.meaning)
+            if issue:
+                return Result(draft, Decision.FLAG, reason=issue)
+            return Result(draft, decision, question=text)
+        candidate = prepared if decision == Decision.ACCEPT_MT else text
         issue = preservation_issue(source, draft, candidate, context)
         if issue:
             return Result(draft, Decision.FLAG, reason=issue)
-        if candidate == draft:
-            decision = Decision.ACCEPT_MT
-        return Result(draft, decision, final_translation=candidate)
+        verify = getattr(type(self.reviewer), "verify", None)
+        if candidate not in (draft, prepared) and verify and not self.reviewer.verify(
+            source, candidate, context
+        ):
+            return Result(draft, Decision.FLAG, reason="Qwen could not confirm the refinement preserves meaning and context.")
+        route = Decision.ACCEPT_MT if candidate == draft else Decision.REFINE
+        return Result(draft, route, final_translation=candidate)
+
+    def _retry(self, source, draft, prepared, context, issue, lexical_question, paraphrase):
+        if lexical_question:
+            return Result(draft, Decision.CLARIFY, question=lexical_question)
+        if getattr(type(self.reviewer), "repair", None) is None:
+            return Result(draft, Decision.FLAG, reason=issue)
+        try:
+            decision, text = parse_review(self.reviewer.repair(source, prepared, context, issue))
+            return self._result(source, draft, prepared, context, decision, text, None, paraphrase)
+        except (ValueError, TypeError, RecursionError, RuntimeError, OSError):
+            return Result(draft, Decision.FLAG, reason=f"{issue} One correction attempt failed.")
