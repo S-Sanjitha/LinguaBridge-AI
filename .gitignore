@@ -9,3 +9,6 @@ hf-cache/
 *.safetensors
 pytorch_model*.bin
 flores200_dataset.tar.gz
+
+node_modules/
+studio/dist/

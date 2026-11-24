@@ -9,7 +9,9 @@ optional context, and can ask for clarification or withhold a questionable resul
 The project aims to translate ordinary sentences on CPU, make contextual
 decisions visible, and measure when review helps or hurts. Use MarianMT alone
 for a direct baseline, or use the agent with formality, speaker or listener
-gender, and intended meaning. A multi-sentence CLI loads the models once.
+gender, and intended meaning. A multi-sentence CLI loads the models once. The local **Translation Studio**
+adds a split-panel web interface with context controls, clarification, and
+a draft-to-final comparison. [Open the Studio setup guide](STUDIO_SETUP.md)
 
 ## Architecture
 
@@ -127,13 +129,16 @@ The extra model and validation steps also add CPU latency.
 | Path | Contents |
 |---|---|
 | `linguabridge/` | CLI, model adapters, agent routing, contextual rules, and validation |
-| `tests/` | Unit tests and MarianMT integration tests |
+| `studio/` | React, TypeScript, Tailwind, and Vite frontend |
+| `linguabridge/api.py` | Loopback FastAPI interface and shared CPU model runtime |
+| `tests/` | Unit tests, API tests, and MarianMT integration tests |
 | `evaluation/` | Dataset definitions, runners, reports, and preserved CPU results |
 | `PROJECT_OVERVIEW.md`, `DEMO_GUIDE.md` | Project summary and presentation walkthrough |
 
 ## Test and reproduce
 
 ```bash
+python -m pip install -r requirements-api.txt
 python -m pytest -q
 curl -fL https://dl.fbaipublicfiles.com/nllb/flores200_dataset.tar.gz -o /tmp/flores200_dataset.tar.gz
 python -m evaluation.run benchmark --archive /tmp/flores200_dataset.tar.gz --limit 25 --threads 1
@@ -142,7 +147,9 @@ python -m evaluation.run holdout --threads 1
 python -m evaluation.compare
 ```
 
-The tests include real MarianMT inference. Agent and CLI unit tests use mocks.
+Run `npm ci && npm test && npm run build` from `studio/` for the frontend checks.
+
+The Python tests include real MarianMT inference. Agent and CLI unit tests use mocks.
 The evaluation commands run both pretrained models and write updated CSV/JSON
 into `evaluation/results/phase4_1/`; use `--output` and `--current` to keep a
 fresh run elsewhere. The runner verifies the original archive digest. The
